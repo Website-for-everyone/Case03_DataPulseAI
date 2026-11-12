@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+
+<script>
+(function() {
+  const MOCK_DB = {"/api/datasets": {"datasets": [{"id": "titanic", "name": "Titanic", "rows": 200, "columns": 8, "column_names": ["PassengerId", "Survived", "Pclass", "Sex", "Age", "Fare", "SibSp", "Parch"]}, {"id": "housing", "name": "Housing", "rows": 200, "columns": 6, "column_names": ["HouseId", "MedIncome", "HouseAge", "AveRooms", "Population", "PriceUSD"]}, {"id": "spotify", "name": "Spotify", "rows": 200, "columns": 7, "column_names": ["TrackId", "Genre", "Danceability", "Energy", "Valence", "TempoBPM", "Popularity"]}, {"id": "sales", "name": "Sales", "rows": 200, "columns": 6, "column_names": ["OrderId", "Category", "Revenue", "Quantity", "Discount", "Profit"]}]}, "/api/dataset/titanic": {"id": "titanic", "rows": 200, "columns": ["PassengerId", "Survived", "Pclass", "Sex", "Age", "Fare", "SibSp", "Parch"], "preview": [{"PassengerId": 1, "Survived": 1, "Pclass": 2, "Sex": "female", "Age": 48.3, "Fare": 15.69, "SibSp": 1, "Parch": 0}, {"PassengerId": 2, "Survived": 0, "Pclass": 3, "Sex": "male", "Age": 30.3, "Fare": 42.94, "SibSp": 0, "Parch": 0}, {"PassengerId": 3, "Survived": 0, "Pclass": 3, "Sex": "male", "Age": 39.5, "Fare": 25.52, "SibSp": 1, "Parch": 0}, {"PassengerId": 4, "Survived": 0, "Pclass": 3, "Sex": "female", "Age": 25.7, "Fare": 8.12, "SibSp": 0, "Parch": 2}, {"PassengerId": 5, "Survived": 1, "Pclass": 1, "Sex": "female", "Age": 34.5, "Fare": 54.99, "SibSp": 0, "Parch": 0}, {"PassengerId": 6, "Survived": 1, "Pclass": 1, "Sex": "male", "Age": 28.2, "Fare": 128.36, "SibSp": 0, "Parch": 1}, {"PassengerId": 7, "Survived": 1, "Pclass": 1, "Sex": "male", "Age": 31.4, "Fare": 252.03, "SibSp": 0, "Parch": 0}, {"PassengerId": 8, "Survived": 1, "Pclass": 3, "Sex": "female", "Age": 38.3, "Fare": 14.56, "SibSp": 0, "Parch": 1}, {"PassengerId": 9, "Survived": 1, "Pclass": 3, "Sex": "male", "Age": 18.5, "Fare": 18.4, "SibSp": 0, "Parch": 1}, {"PassengerId": 10, "Survived": 0, "Pclass": 3, "Sex": "male", "Age": 59.3, "Fare": 9.19, "SibSp": 0, "Parch": 0}, {"PassengerId": 11, "Survived": 1, "Pclass": 1, "Sex": "male", "Age": 15.9, "Fare": 157.4, "SibSp": 0, "Parch": 0}, {"PassengerId": 12, "Survived": 1, "Pclass": 3, "Sex": "female", "Age": 13.0, "Fare": 10.16, "SibSp": 0, "Parch": 1}, {"PassengerId": 13, "Survived": 1, "Pclass": 3, "Sex": "female", "Age": 46.2, "Fare": 41.32, "SibSp": 0, "Parch": 0}, {"PassengerId": 14, "Survived": 1, "Pclass": 1, "Sex": "male", "Age": 41.1, "Fare": 84.33, "SibSp": 0, "Parch": 0}, {"PassengerId": 15, "Survived": 1, "Pclass": 1, "Sex": "female", "Age": 38.7, "Fare": 96.68, "SibSp": 0, "Parch": 0}]}, "/api/dataset/titanic/profile": {"rows": 200, "columns_count": 8, "columns": ["PassengerId", "Survived", "Pclass", "Sex", "Age", "Fare", "SibSp", "Parch"], "numeric_columns": ["PassengerId", "Survived", "Pclass", "Age", "Fare", "SibSp", "Parch"], "categorical_columns": ["Sex"], "stats": {"PassengerId": {"mean": 100.5, "median": 100.5, "std": 57.88, "min": 1.0, "max": 200.0, "q25": 50.75, "q75": 150.25, "iqr": 99.5, "outliers_count": 0, "missing_count": 0}, "Survived": {"mean": 0.47, "median": 0.0, "std": 0.5, "min": 0.0, "max": 1.0, "q25": 0.0, "q75": 1.0, "iqr": 1.0, "outliers_count": 0, "missing_count": 0}, "Pclass": {"mean": 2.21, "median": 2.0, "std": 0.85, "min": 1.0, "max": 3.0, "q25": 1.0, "q75": 3.0, "iqr": 2.0, "outliers_count": 0, "missing_count": 0}, "Age": {"mean": 29.96, "median": 29.6, "std": 13.79, "min": 1.0, "max": 73.1, "q25": 19.38, "q75": 38.73, "iqr": 19.35, "outliers_count": 1, "missing_count": 0}, "Fare": {"mean": 52.28, "median": 26.54, "std": 60.9, "min": 7.14, "max": 375.13, "q25": 16.06, "q75": 61.24, "iqr": 45.18, "outliers_count": 20, "missing_count": 0}, "SibSp": {"mean": 0.38, "median": 0.0, "std": 0.71, "min": 0.0, "max": 3.0, "q25": 0.0, "q75": 1.0, "iqr": 1.0, "outliers_count": 5, "missing_count": 0}, "Parch": {"mean": 0.34, "median": 0.0, "std": 0.62, "min": 0.0, "max": 2.0, "q25": 0.0, "q75": 1.0, "iqr": 1.0, "outliers_count": 0, "missing_count": 0}}}, "/api/dataset/titanic/correlation": {"columns": ["PassengerId", "Survived", "Pclass", "Age", "Fare", "SibSp", "Parch"], "matrix": [[1.0, -0.147, 0.065, -0.075, -0.059, 0.156, 0.042], [-0.147, 1.0, -0.336, -0.029, 0.216, -0.019, 0.062], [0.065, -0.336, 1.0, 0.036, -0.684, 0.017, 0.056], [-0.075, -0.029, 0.036, 1.0, -0.047, 0.018, 0.138], [-0.059, 0.216, -0.684, -0.047, 1.0, -0.094, -0.009], [0.156, -0.019, 0.017, 0.018, -0.094, 1.0, 0.006], [0.042, 0.062, 0.056, 0.138, -0.009, 0.006, 1.0]]}};
+  const STORAGE_KEY = "idrisov_demo_" + "Case03_DataPulseAI";
+  let localState = {};
+  try { localState = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch(e) {}
+  function saveState() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(localState)); } catch(e) {} }
+
+  const origFetch = window.fetch.bind(window);
+  window.fetch = async function(input, init) {
+    const urlStr = typeof input === "string" ? input : (input && input.url) || "";
+    if (!urlStr.includes("/api/")) {
+      return origFetch(input, init);
+    }
+
+    const method = ((init && init.method) || "GET").toUpperCase();
+    let body = {};
+    if (init && init.body && typeof init.body === "string") {
+      try { body = JSON.parse(init.body); } catch(e) {}
+    }
+
+    const pathOnly = urlStr.split("?")[0];
+    const urlPath = pathOnly.startsWith("http") ? new URL(pathOnly).pathname : pathOnly;
+
+    // 1. Exact GET match from extracted FastAPI TestClient data
+    if (method === "GET") {
+      if (MOCK_DB[urlStr]) return jsonResp(MOCK_DB[urlStr]);
+      if (MOCK_DB[urlPath]) return jsonResp(MOCK_DB[urlPath]);
+      for (const k of Object.keys(MOCK_DB)) {
+        if (k.split("?")[0] === urlPath) return jsonResp(MOCK_DB[k]);
+      }
+      if (urlPath.includes("/api/dataset/") && !MOCK_DB[urlPath]) {
+        const fallbackKey = Object.keys(MOCK_DB).find(k => k.startsWith("/api/dataset/"));
+        if (fallbackKey) return jsonResp(MOCK_DB[fallbackKey]);
+      }
+    }
+
+    // 2. Dynamic Calculators & Interactive Endpoints
+    if (urlPath.endsWith("/calculate")) {
+      const base = Number(body.base_price || body.area || body.days || 1) * 1500 || 4500;
+      const total = Math.max(2500, Math.round(base + (Number(body.weight_kg || 5) * 200)));
+      return jsonResp({
+        status: "ok",
+        total_price: total,
+        price_rub: total,
+        estimated_price: total,
+        duration_minutes: 90,
+        breakdown: { base: Math.round(total * 0.7), extras: Math.round(total * 0.3) },
+        currency: "RUB"
+      });
+    }
+
+    if (urlPath.includes("/estimate")) {
+      return jsonResp({
+        status: "ok",
+        total_rub: 3850000,
+        timeline_weeks: 8,
+        summary: "Смета сформирована (Static Demo Mode)",
+        estimate_id: "EST-" + Math.floor(1000 + Math.random() * 9000)
+      });
+    }
+
+    if (urlPath.includes("/query") || urlPath.includes("/historian/ask")) {
+      const q = body.question || body.query || body.prompt || "Анализ данных";
+      return jsonResp({
+        status: "ok",
+        answer: "Аналитический ответ (Demo AI): по запросу «" + q + "» выявлена устойчивая корреляция (r = 0.78, p < 0.01). Медианные значения находятся в пределах целевого диапазона без критических выбросов.",
+        metrics: [
+          { label: "Медиана", value: "42.8" },
+          { label: "Std Dev", value: "6.14" },
+          { label: "Выбросы", value: "2.1%" }
+        ]
+      });
+    }
+
+    if (urlPath.includes("/quiz/recommend")) {
+      return jsonResp({
+        status: "ok",
+        recommendation: {
+          name: "Ethiopia Yirgacheffe Kochere",
+          origin: "Ethiopia",
+          roast: "Light Filter",
+          notes: ["Бергамот", "Жасмин", "Персик"],
+          match_percent: 96
+        }
+      });
+    }
+
+    if (urlPath.includes("/verify-passcode")) {
+      return jsonResp({ status: "success", unlocked: true, valid: true, message: "VIP ACCESS GRANTED" });
+    }
+
+    if (urlPath.includes("/track-order")) {
+      return jsonResp({
+        status: "success",
+        order_id: urlPath.split("/").pop() || "CR-2026",
+        stage: "Регулировка хода и тест герметичности (Этап 4/5)",
+        master: "Виктор К.",
+        eta: "2 дня"
+      });
+    }
+
+    if (urlPath.includes("/tasks")) {
+      localState.tasks = localState.tasks || (MOCK_DB["/api/tasks"] && MOCK_DB["/api/tasks"].tasks) || [];
+      if (method === "POST" && urlPath.endsWith("/tasks")) {
+        const t = { id: Date.now(), title: body.title || "Новая задача", duration_hours: Number(body.duration_hours || 1), quadrant: body.quadrant || "urgent_important", is_completed: false };
+        localState.tasks.push(t);
+        saveState();
+        return jsonResp({ status: "ok", task: t, tasks: localState.tasks });
+      }
+      if (urlPath.includes("/toggle")) {
+        const id = Number(urlPath.split("/")[3]);
+        localState.tasks = localState.tasks.map(t => t.id === id ? { ...t, is_completed: !t.is_completed } : t);
+        saveState();
+        return jsonResp({ status: "ok", tasks: localState.tasks });
+      }
+      if (method === "DELETE") {
+        const id = Number(urlPath.split("/").pop());
+        localState.tasks = localState.tasks.filter(t => t.id !== id);
+        saveState();
+        return jsonResp({ status: "ok", tasks: localState.tasks });
+      }
+      return jsonResp({ tasks: localState.tasks });
+    }
+
+    if (urlPath === "/api/state") {
+      return jsonResp(MOCK_DB["/api/state"] || {
+        title: "LIVE RAP & TECH BATTLE // FINAL",
+        round: 3,
+        status: "VOTING_OPEN",
+        fighters: [
+          { id: "mc_a", name: "MC NEON", votes: 142, color: "#00f0ff" },
+          { id: "mc_b", name: "BYTE_KILLER", votes: 138, color: "#ff007f" }
+        ]
+      });
+    }
+
+    if (urlPath === "/api/vote") {
+      return jsonResp({ status: "ok", message: "Голос учтен!", voted: true });
+    }
+
+    // Default POST confirmation (bookings, orders, quotes, appraisals, seat reservations)
+    const refId = "ID-" + Math.floor(10000 + Math.random() * 90000);
+    return jsonResp({
+      status: "ok",
+      success: true,
+      id: refId,
+      booking_id: refId,
+      cert_id: refId,
+      voucher: "VIP-" + refId,
+      order_id: refId,
+      message: "Заявка #" + refId + " успешно оформлена и синхронизирована с Telegram-ботом @Idrisov_prod!"
+    });
+  };
+
+  function jsonResp(data) {
+    return new Response(JSON.stringify(data), {
+      status: 200,
+      headers: { "Content-Type": "application/json" }
+    });
+  }
+})();
+</script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DataPulse AI — Linear-Style Data Copilot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-canvas: #0D0E12;
+      --bg-surface: #16181D;
+      --bg-surface-hover: #1E2128;
+      --border-subtle: #23272F;
+      --border-active: #3E4452;
+      --brand-violet: #7C3AED;
+      --brand-cyan: #06B6D4;
+      --brand-emerald: #10B981;
+      --brand-amber: #F59E0B;
+      --brand-rose: #F43F5E;
+      --text-main: #EDEDED;
+      --text-muted: #8E95A5;
+      --text-faint: #565C6B;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: var(--bg-canvas);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Top Navigation */
+    header {
+      height: 60px;
+      border-bottom: 1px solid var(--border-subtle);
+      background: rgba(13, 14, 18, 0.85);
+      backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 1.15rem;
+      letter-spacing: -0.3px;
+    }
+
+    .brand-badge {
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, var(--brand-violet), var(--brand-cyan));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+    }
+
+    /* 3-Column Layout */
+    .dashboard-container {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 280px 1fr 340px;
+      height: calc(100vh - 60px);
+    }
+
+    /* Left Sidebar: Datasets & Upload */
+    .sidebar-left {
+      border-right: 1px solid var(--border-subtle);
+      background: var(--bg-surface);
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      overflow-y: auto;
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-faint);
+      margin-bottom: 8px;
+    }
+
+    .dataset-tab {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      border: 1px solid transparent;
+      transition: all 0.15s ease;
+    }
+
+    .dataset-tab:hover {
+      background: var(--bg-surface-hover);
+      color: var(--text-main);
+    }
+
+    .dataset-tab.active {
+      background: rgba(124, 58, 237, 0.15);
+      border-color: rgba(124, 58, 237, 0.4);
+      color: #C4B5FD;
+    }
+
+    .dropzone {
+      border: 1px dashed var(--border-subtle);
+      border-radius: 10px;
+      padding: 20px 14px;
+      text-align: center;
+      cursor: pointer;
+      background: rgba(22, 24, 29, 0.5);
+      transition: all 0.2s ease;
+    }
+
+    .dropzone:hover {
+      border-color: var(--brand-cyan);
+      background: rgba(6, 182, 212, 0.05);
+    }
+
+    /* Center: Analysis & Heatmap */
+    .main-workspace {
+      padding: 24px 30px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .stat-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .stat-val {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    /* Correlation Heatmap */
+    .heatmap-container {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .heatmap-grid {
+      display: grid;
+      gap: 4px;
+      margin-top: 14px;
+      overflow-x: auto;
+    }
+
+    .heatmap-cell {
+      height: 48px;
+      min-width: 48px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+
+    .heatmap-cell:hover {
+      transform: scale(1.08);
+      z-index: 10;
+    }
+
+    /* Data Preview Table */
+    .table-container {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 16px;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    th {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+    }
+
+    td {
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(35, 39, 47, 0.5);
+      color: var(--text-main);
+    }
+
+    /* Right Sidebar: AI Chat */
+    .sidebar-right {
+      border-left: 1px solid var(--border-subtle);
+      background: var(--bg-surface);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .chat-header {
+      padding: 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      font-size: 0.95rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .chat-bubble {
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      line-height: 1.45;
+    }
+
+    .bubble-user {
+      background: rgba(124, 58, 237, 0.2);
+      border: 1px solid rgba(124, 58, 237, 0.4);
+      align-self: flex-end;
+      color: #DDD6FE;
+    }
+
+    .bubble-ai {
+      background: var(--bg-canvas);
+      border: 1px solid var(--border-subtle);
+      align-self: flex-start;
+    }
+
+    .code-badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      background: rgba(0, 0, 0, 0.4);
+      color: var(--brand-cyan);
+      padding: 4px 8px;
+      border-radius: 6px;
+      margin-top: 6px;
+      border: 1px solid rgba(6, 182, 212, 0.2);
+    }
+
+    .chat-input-bar {
+      padding: 14px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .prompt-chips {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .chip-btn {
+      white-space: nowrap;
+      font-size: 0.75rem;
+      background: var(--bg-canvas);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      padding: 4px 10px;
+      border-radius: 14px;
+      cursor: pointer;
+    }
+
+    .chip-btn:hover {
+      border-color: var(--brand-violet);
+      color: var(--text-main);
+    }
+
+    .chat-form {
+      display: flex;
+      gap: 8px;
+    }
+
+    .chat-input {
+      flex: 1;
+      background: var(--bg-canvas);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: white;
+      font-size: 0.88rem;
+      outline: none;
+    }
+
+    .chat-input:focus {
+      border-color: var(--brand-violet);
+    }
+
+    .send-btn {
+      background: var(--brand-violet);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0 14px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    @media (max-width: 1024px) {
+      .dashboard-container { grid-template-columns: 1fr; height: auto; }
+      .sidebar-left, .sidebar-right { border: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      <div class="brand-badge">⚡</div>
+      <span>DataPulse AI</span>
+      <span style="font-size:0.75rem; background:rgba(124,58,237,0.2); color:#A78BFA; padding:2px 8px; border-radius:10px; border:1px solid rgba(124,58,237,0.4)">Linear Dark Edition</span>
+    </div>
+
+    <div style="display:flex; align-items:center; gap:16px;">
+      <a href="https://t.me/Idrisov_prod" target="_blank" style="color:var(--text-muted); text-decoration:none; font-size:0.85rem; font-family:'JetBrains Mono'">@Idrisov_prod</a>
+    </div>
+  </header>
+
+  <div class="dashboard-container">
+    <!-- Left Sidebar -->
+    <aside class="sidebar-left">
+      <div>
+        <div class="section-label">Датасеты</div>
+        <div id="datasetTabsList" style="display:flex; flex-direction:column; gap:6px;">
+          <div class="dataset-tab active" data-id="titanic">🚢 Titanic Survival</div>
+          <div class="dataset-tab" data-id="housing">🏡 CA Real Estate</div>
+          <div class="dataset-tab" data-id="spotify">🎵 Spotify Top Tracks</div>
+          <div class="dataset-tab" data-id="sales">📈 Retail Sales</div>
+        </div>
+      </div>
+
+      <!-- Drag & Drop Zone -->
+      <div>
+        <div class="section-label">Загрузить свой файл</div>
+        <div class="dropzone" id="fileDropzone">
+          <div style="font-size:1.6rem; margin-bottom:6px;">📁</div>
+          <div style="font-size:0.85rem; font-weight:600; margin-bottom:4px;">Перетащите CSV / XLSX</div>
+          <div style="font-size:0.75rem; color:var(--text-faint);">до 25 МБ, авто-схема</div>
+          <input type="file" id="fileInput" accept=".csv, .xlsx" style="display:none;">
+        </div>
+      </div>
+
+      <!-- Schema Metadata -->
+      <div style="border-top: 1px solid var(--border-subtle); padding-top:14px;">
+        <div class="section-label">Информация о датасете</div>
+        <div style="font-size:0.82rem; color:var(--text-muted); display:flex; flex-direction:column; gap:6px;">
+          <div>Строк: <b id="metaRows" style="color:var(--text-main)">200</b></div>
+          <div>Колонок: <b id="metaCols" style="color:var(--text-main)">8</b></div>
+          <div>Тип: <b style="color:var(--brand-emerald)">Verified Pandas Frame</b></div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Center Workspace -->
+    <main class="main-workspace">
+      <!-- Quick Stats Metrics -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-label">Всего наблюдений</div>
+          <div class="stat-val" id="statRows">200</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Медиана первичной метрики</div>
+          <div class="stat-val" id="statMedian">--</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Выбросы (IQR Tukey)</div>
+          <div class="stat-val" id="statOutliers" style="color:var(--brand-amber)">--</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Стандартное отклонение</div>
+          <div class="stat-val" id="statStd">--</div>
+        </div>
+      </div>
+
+      <!-- Correlation Heatmap -->
+      <div class="heatmap-container">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <h3 style="font-size:1.05rem; font-weight:700;">Матрица Корреляций Пирсона</h3>
+            <p style="font-size:0.8rem; color:var(--text-muted);">Интерактивная тепловая шкала от -1.0 до +1.0</p>
+          </div>
+          <div style="font-size:0.75rem; color:var(--text-muted); display:flex; align-items:center; gap:8px;">
+            <span style="color:var(--brand-rose)">■ Отрицательная (-1.0)</span>
+            <span style="color:var(--brand-emerald)">■ Положительная (+1.0)</span>
+          </div>
+        </div>
+        <div id="heatmapContent" class="heatmap-grid">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+
+      <!-- Preview Table -->
+      <div class="table-container">
+        <h3 style="font-size:1.05rem; font-weight:700; margin-bottom:12px;">Предпросмотр Данных (Топ-15 строк)</h3>
+        <table id="previewTable">
+          <thead id="tableHead"></thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </main>
+
+    <!-- Right Sidebar: AI Chat -->
+    <aside class="sidebar-right">
+      <div class="chat-header">
+        <span>🤖</span>
+        <span>AI Data Copilot</span>
+      </div>
+
+      <div class="chat-messages" id="chatMessages">
+        <div class="chat-bubble bubble-ai">
+          Привет! Я ваш аналитический ассистент. Задайте любой вопрос на русском или английском (например, <i>«Покажи медиану Fare»</i> или <i>«Найди выбросы»</i>).
+        </div>
+      </div>
+
+      <div class="chat-input-bar">
+        <div class="prompt-chips">
+          <button class="chip-btn" onclick="sendPrompt('Покажи медиану')">Медиана</button>
+          <button class="chip-btn" onclick="sendPrompt('Найди выбросы')">Выбросы</button>
+          <button class="chip-btn" onclick="sendPrompt('Покажи топ-5 записей')">Топ-5</button>
+        </div>
+
+        <form class="chat-form" onsubmit="handleChatSubmit(event)">
+          <input type="text" class="chat-input" id="chatInput" placeholder="Спросите что-то о данных..." required>
+          <button type="submit" class="send-btn">➔</button>
+        </form>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    let currentDataset = 'titanic';
+
+    // Switch Dataset Tabs
+    const tabs = document.querySelectorAll('.dataset-tab');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentDataset = tab.getAttribute('data-id');
+        loadDatasetData(currentDataset);
+      });
+    });
+
+    async function loadDatasetData(name) {
+      try {
+        const [previewRes, profileRes, corrRes] = await Promise.all([
+          fetch(`/api/dataset/${name}`),
+          fetch(`/api/dataset/${name}/profile`),
+          fetch(`/api/dataset/${name}/correlation`)
+        ]);
+
+        const previewData = await previewRes.json();
+        const profileData = await profileRes.json();
+        const corrData = await corrRes.json();
+
+        // Update Metadata & Summary Stats
+        document.getElementById('metaRows').innerText = previewData.rows;
+        document.getElementById('metaCols').innerText = previewData.columns.length;
+        document.getElementById('statRows').innerText = previewData.rows;
+
+        const firstNumCol = profileData.numeric_columns[0];
+        if (firstNumCol && profileData.stats[firstNumCol]) {
+          const s = profileData.stats[firstNumCol];
+          document.getElementById('statMedian').innerText = s.median;
+          document.getElementById('statOutliers').innerText = s.outliers_count;
+          document.getElementById('statStd').innerText = s.std;
+        }
+
+        // Render Table Preview
+        const thead = document.getElementById('tableHead');
+        thead.innerHTML = `<tr>${previewData.columns.map(c => `<th>${c}</th>`).join('')}</tr>`;
+
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = previewData.preview.map(row => {
+          return `<tr>${previewData.columns.map(c => `<td>${row[c] !== undefined ? row[c] : ''}</td>`).join('')}</tr>`;
+        }).join('');
+
+        // Render Correlation Heatmap
+        renderHeatmap(corrData);
+
+      } catch (err) {
+        console.error("Load dataset error:", err);
+      }
+    }
+
+    function renderHeatmap(corrData) {
+      const container = document.getElementById('heatmapContent');
+      const cols = corrData.columns;
+      if (!cols || cols.length === 0) {
+        container.innerHTML = '<div style="color:var(--text-faint); padding:20px;">Нет числовых колонок для корреляции</div>';
+        return;
+      }
+
+      container.style.gridTemplateColumns = `repeat(${cols.length}, 1fr)`;
+      let html = '';
+      for (let r = 0; r < cols.length; r++) {
+        for (let c = 0; c < cols.length; c++) {
+          const val = corrData.matrix[r][c];
+          // Color interpolate from red (-1) to neutral (0) to emerald/cyan (+1)
+          let bgColor = 'rgba(255, 255, 255, 0.05)';
+          if (val > 0) {
+            bgColor = `rgba(16, 185, 129, ${Math.abs(val) * 0.75 + 0.1})`;
+          } else if (val < 0) {
+            bgColor = `rgba(244, 63, 94, ${Math.abs(val) * 0.75 + 0.1})`;
+          }
+          html += `
+            <div class="heatmap-cell" style="background:${bgColor}" title="${cols[r]} vs ${cols[c]}: ${val}">
+              ${val.toFixed(2)}
+            </div>
+          `;
+        }
+      }
+      container.innerHTML = html;
+    }
+
+    // AI Chat Handling
+    async function handleChatSubmit(e) {
+      e.preventDefault();
+      const input = document.getElementById('chatInput');
+      const prompt = input.value.trim();
+      if (!prompt) return;
+      input.value = '';
+
+      sendPrompt(prompt);
+    }
+
+    async function sendPrompt(text) {
+      const chatBox = document.getElementById('chatMessages');
+      // Append user bubble
+      const userBubble = document.createElement('div');
+      userBubble.className = 'chat-bubble bubble-user';
+      userBubble.innerText = text;
+      chatBox.appendChild(userBubble);
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      try {
+        const res = await fetch('/api/query', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            dataset_name: currentDataset,
+            query_text: text
+          })
+        });
+
+        const data = await res.json();
+        const aiBubble = document.createElement('div');
+        aiBubble.className = 'chat-bubble bubble-ai';
+
+        let content = `<div><b>${data.summary_card.metric}</b></div>`;
+        if (data.summary_card.value !== undefined) {
+          content += `<div style="font-size:1.2rem; font-weight:700; color:var(--brand-cyan); margin:4px 0;">${data.summary_card.value}</div>`;
+        }
+        if (data.summary_card.count !== undefined) {
+          content += `<div>Количество: <b>${data.summary_card.count}</b> (${data.summary_card.pct})</div>`;
+        }
+        content += `<div class="code-badge">Pandas: ${data.code_executed}</div>`;
+
+        aiBubble.innerHTML = content;
+        chatBox.appendChild(aiBubble);
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+      } catch (err) {
+        const errorBubble = document.createElement('div');
+        errorBubble.className = 'chat-bubble bubble-ai';
+        errorBubble.innerText = "Ошибка обработки запроса.";
+        chatBox.appendChild(errorBubble);
+      }
+    }
+
+    // File Drag & Drop Trigger
+    const dropzone = document.getElementById('fileDropzone');
+    const fileInput = document.getElementById('fileInput');
+
+    dropzone.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files.length > 0) {
+        alert(`Файл ${fileInput.files[0].name} успешно загружен в клиентский кэш.`);
+      }
+    });
+
+    // Initial load
+    loadDatasetData(currentDataset);
+  </script>
+</body>
+</html>
