@@ -1,0 +1,29 @@
+# Secrets & Sessions
+.env
+.env.local
+.env.*.local
+*.session
+*.session-journal
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+.pytest_cache/
+*.db
+*.sqlite
+*.sqlite3
+
+# Node / Web
+node_modules/
+.next/
+dist/
+build/
+.turbo/
+out/
+
+# OS
+.DS_Store
+Thumbs.db
